@@ -3,7 +3,8 @@ import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 
-def create_radar_chart(df):
+
+def create_radar_chart1(df):
     values = {
         'Siamo un’azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l’introduzione di tecnologie digitali': 'Relativamente digitale',
         'È stato avviato qualche progetto pilota di trasformazione digitale che al momento è ancora in corso': 'Qualche progetto avviato',
