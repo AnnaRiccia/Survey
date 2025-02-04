@@ -4,15 +4,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import plotly.io as pio
-from corr import correlazione1_budget, heatmap_anni_maturita, plot_criticita_budget, cor_budget_efficienza
 
-
-from key import hist_soddisfazione_maturita, visualizza_maturita_infrastrutture, analizza_relazione_inizio_maturita_heatmap, visualizza_maturita_figure, analizza_maturita_leader
-
-
-# classe creata
+# Classi importate
+from corr import Correlazione
 from func import funz, GraficoInfrastruttura, GraficoRelazioni, GraficoFigure
-
+from key import key
 
 
 pio.templates.default = "plotly"
@@ -124,16 +120,6 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
 def create_section(title, plot_function, df, explanation=None):
     col_left, col_center, col_right = st.columns([1, 4, 1])
     with col_center:
-        st.markdown(
-            """
-            <style>
-                body {
-                    background-color: #f5f5dc;  /* Beige chiaro */
-                }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
         st.markdown(f"### {title}", unsafe_allow_html=True)
         plot_function(df)  # Richiama la funzione passata come parametro
         if explanation:
@@ -504,7 +490,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
 elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
     create_section(
         title='Maturità Digitale e Soddisfazione',
-        plot_function=hist_soddisfazione_maturita,
+        plot_function=key.hist_soddisfazione_maturita,
         df=df,
         explanation= 
             """  
@@ -512,7 +498,7 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
             """)  
     create_section(
         title='Maturità Digitale e Infrastrutture Digitali',
-        plot_function=visualizza_maturita_infrastrutture,
+        plot_function=key.visualizza_maturita_infrastrutture,
         df=df,
         explanation= 
             """  
@@ -523,7 +509,7 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
     
     create_section(
             title='Maturità Digitale e Presenza Figure Competenti ',
-            plot_function=visualizza_maturita_figure,
+            plot_function=key.visualizza_maturita_figure,
             df=df,
             explanation= 
                 """  
@@ -532,7 +518,7 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
     
     create_section(
             title='Periodo di Inizio Transizione Digitale e Maturità Digitale Raggiunta ',
-            plot_function=analizza_relazione_inizio_maturita_heatmap,
+            plot_function=key.analizza_relazione_inizio_maturita_heatmap,
             df=df,
             explanation= 
                 """  
@@ -540,7 +526,7 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
                 """)
     create_section(
             title='Grado di Coinvolgimento del Leader e Maturità Digitale Raggiunta ',
-            plot_function=analizza_maturita_leader,
+            plot_function=key.analizza_maturita_leader,
             df=df,
             explanation= 
                 """  
@@ -554,7 +540,7 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
 elif st.session_state.selected_tab == "Analisi Correlazionale":
     create_section(
         title='Correlazione tra Soddisfazione e Budget Investito',
-        plot_function=correlazione1_budget,
+        plot_function=Correlazione.correlazione1_budget,
         df=df,
         explanation= 
             """  
@@ -562,7 +548,7 @@ elif st.session_state.selected_tab == "Analisi Correlazionale":
             """)  
     create_section(
         title= 'Correlazione tra Anni di Esperienza e Maturità Digitale',
-        plot_function=heatmap_anni_maturita,
+        plot_function=Correlazione.heatmap_anni_maturita,
         df=df,
         explanation= 
             """  
@@ -570,7 +556,7 @@ elif st.session_state.selected_tab == "Analisi Correlazionale":
             """) 
     create_section(
         title= 'Correlazione tra Budget (% sul fatturato) e Criticità Riscontrate',
-        plot_function=plot_criticita_budget,
+        plot_function=Correlazione.plot_criticita_budget,
         df=df,
         explanation= 
             """  
@@ -578,7 +564,7 @@ elif st.session_state.selected_tab == "Analisi Correlazionale":
             """)  
     create_section(
         title= 'Correlazione tra Impatto sull\'Efficienza e Budget Investito',
-        plot_function=cor_budget_efficienza,
+        plot_function=Correlazione.cor_budget_efficienza,
         df=df,
         explanation= 
             """  

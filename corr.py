@@ -9,25 +9,22 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-class Corrrelazione:
-    def __init__(self, df):
-        self.df = df
+class Correlazione:
+    def semplifica_budget(df):
+        df['budget'] = df['budget'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
 
-    def semplifica_budget(self):
-        self.df['budget'] = self.df['budget'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
-
-    def mappa_maturita(self):
+    def mappa_maturita(df):
         values = {
-            'Siamo un’azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l’introduzione di tecnologie digitali': 'Relativamente digitale',
+            'Siamo un\'azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l\'introduzione di tecnologie digitali': 'Relativamente digitale',
             'È stato avviato qualche progetto pilota di trasformazione digitale che al momento è ancora in corso': 'Qualche progetto avviato',
-            'Siamo un’azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall’utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
+            'Siamo un\'azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall\'utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
             'Al momento non è in corso un processo di trasformazione digitale né è stato avviato e concluso in passato': 'Non digitalizzato',
             'È stato avviato qualche progetto pilota di trasformazione digitale che è stato interrotto e non portato a compimento': 'Qualche progetto interrotto'
         }
-        self.df['maturita_digitale'] = self.df['maturita_digitale'].replace(values)
-        self.df['maturita_digitale'].fillna('Nessuna risposta', inplace=True)
+        df['maturita_digitale'] = df['maturita_digitale'].replace(values)
+        df['maturita_digitale'].fillna('Nessuna risposta', inplace=True)
 
-    def categorizza_anni(self):
+    def categorizza_anni(df):
         """
         Categorizza il numero di anni in fasce predefinite.
         """
@@ -49,20 +46,20 @@ class Corrrelazione:
             except ValueError:  # Gestisce errori se 'anni' non è un numero
                 return 'Non specificato'
 
-        self.df['anni_attivita_categoria'] = self.df['anni_attivita'].apply(categoria)
+        df['anni_attivita_categoria'] = df['anni_attivita'].apply(categoria)
 
-    def heatmap_anni_maturita(self):
+    def heatmap_anni_maturita(df):
         # Mappare maturità digitale
-        self.mappa_maturita()
+        mappa_maturita(df)
         
         # Categorizzare gli anni
-        self.categorizza_anni()
+        categorizza_anni(df)
         
         # Ordinare per fasce di anni
         ordine_anni = ['0-5 anni', '6-10 anni', '11-15 anni', '16-20 anni', 'Oltre 20 anni']
         
         # Creare la tabella pivot
-        pivot = pd.crosstab(self.df['anni_attivita_categoria'], self.df['maturita_digitale'])
+        pivot = pd.crosstab(df['anni_attivita_categoria'], df['maturita_digitale'])
         pivot = pivot.reindex(ordine_anni)
         
         # Heatmap per la relazione tra Maturità Digitale e Fascia di Anni
@@ -100,8 +97,8 @@ class Corrrelazione:
 
 
 
-    def correlazione1_budget(self):
-        df['budget_clean'] = df['budget_trans'].apply(self.semplifica_budget)
+    def correlazione1_budget(df):
+        df['budget_clean'] = df['budget_trans'].apply(semplifica_budget)
 
         ordine_budget = ['Meno del 5%', '5%-10%', '11%-20%', '21%-30%', 'Più del 30%', 'Non specificato']
 
@@ -115,7 +112,7 @@ class Corrrelazione:
         }
 
         # Creare la crosstab per la relazione tra 'budget_clean' e 'soddisfazione'
-        pivot_budget_sodd = pd.crosstab(self.df['budget_clean'], self.df['soddisfazione'])
+        pivot_budget_sodd = pd.crosstab(df['budget_clean'], df['soddisfazione'])
         pivot_budget_sodd = pivot_budget_sodd.reindex(ordine_budget)
 
         # Rinomina le colonne secondo il mapping
@@ -154,74 +151,74 @@ class Corrrelazione:
 
 
 
-    def plot_criticita_budget(self):
+    def plot_criticita_budget(df):
         # Passaggio 1: Rimpiazzo delle stringhe nella colonna 'criticita'
-        self.df['criticita'] = self.df['criticita'].str.replace(
+        df['criticita'] = df['criticita'].str.replace(
             r'Inadeguata analisi dei Business Case, la quale ha portato ha sottovalutare alcune criticità o non cogliere determinate opportunità.',
             'Analisi dei Business Case', regex=True
         )
-        self.df['criticita'] = self.df['criticita'].str.replace(
+        df['criticita'] = df['criticita'].str.replace(
             r'Problematiche emerse durante la fase di implementazione, come ad esempio un non adeguato ingaggio degli attori coinvolti.',
             'Problematiche Implementazione', regex=True
         )
-        self.df['criticita'] = self.df['criticita'].str.replace(
+        df['criticita'] = df['criticita'].str.replace(
             r'Inadeguato allineamento tra strategia e attività svolta.',
             'Allineamento strategia/attività', regex=True
         )
-        self.df['criticita'] = self.df['criticita'].str.replace(
+        df['criticita'] = df['criticita'].str.replace(
             r'Governance del progetto non adeguata',
             'Governance progetto.', regex=True
         )
 
 
-    # Passaggio 2: Separare le risposte multiple (se ce ne sono) in modo che ogni riga abbia una singola criticità
-    df_separato = df['criticita'].str.split(',', expand=True).stack().reset_index(level=1, drop=True)
-    df_separato.name = 'criticita'
-    df = df.drop('criticita', axis=1).join(df_separato)
+        # Passaggio 2: Separare le risposte multiple (se ce ne sono) in modo che ogni riga abbia una singola criticità
+        df_separato = df['criticita'].str.split(',', expand=True).stack(df).reset_index(level=1, drop=True)
+        df_separato.name = 'criticita'
+        df = df.drop('criticita', axis=1).join(df_separato)
 
-    # Passaggio 3: Aggiungere la colonna 'budget_clean' con la funzione semplifica_budget
-    df['budget_clean'] = df['budget_trans'].apply(semplifica_budget)
+        # Passaggio 3: Aggiungere la colonna 'budget_clean' con la funzione semplifica_budget
+        df['budget_clean'] = df['budget_trans'].apply(semplifica_budget)
 
-    # Passaggio 4: Creare la crosstab per la relazione tra 'budget_clean' e 'criticita'
-    pivot_budget_criticita = pd.crosstab(df['criticita'], df['budget_clean'])
+        # Passaggio 4: Creare la crosstab per la relazione tra 'budget_clean' e 'criticita'
+        pivot_budget_criticita = pd.crosstab(df['criticita'], df['budget_clean'])
 
-    # Passaggio 5: Heatmap per la relazione tra Budget e Criticità
-    fig = px.imshow(
-        pivot_budget_criticita,
-        text_auto=True,  # Aggiunge i valori nella cella
-        color_continuous_scale=['#E4F1F9', '#C0D9E2', '#9ACBCF', '#6DB8C0', '#3C9D9A'],  # Scala di colori verdi
-        title='  ',
-        labels={'x': 'Budget (% sul fatturato)', 'y': 'Tipo di Criticità', 'color': 'Numero di Aziende'}
-    )
+        # Passaggio 5: Heatmap per la relazione tra Budget e Criticità
+        fig = px.imshow(
+            pivot_budget_criticita,
+            text_auto=True,  # Aggiunge i valori nella cella
+            color_continuous_scale=['#E4F1F9', '#C0D9E2', '#9ACBCF', '#6DB8C0', '#3C9D9A'],  # Scala di colori verdi
+            title='  ',
+            labels={'x': 'Budget (% sul fatturato)', 'y': 'Tipo di Criticità', 'color': 'Numero di Aziende'}
+        )
 
-    # Passaggio 6: Aggiustamenti grafici per l'aspetto del grafico
-    fig.update_layout(
-        xaxis=dict(
-            title=dict(text='Budget (% sul fatturato)', font=dict(size=16, family='Arial', weight='bold')),  # Grassetto per l'asse X
-            tickfont=dict(size=14, family='Arial', weight='bold'),  # Grassetto per i tick dell'asse X
-            tickangle=0  # Angolatura dell'asse x impostata a 0 (per evitare inclinazioni)
-        ),
-        yaxis=dict(
-            title=dict(text='Tipo di Criticità', font=dict(size=16, family='Arial', weight='bold')),  # Grassetto per l'asse Y
-            tickfont=dict(size=14, family='Arial', weight='bold')  # Grassetto per i tick dell'asse Y
-        ),
-        title={'text': '  ', 'x': 0.5},  # Centra il titolo
-        template='plotly_white',  # Tema bianco
-        font=dict(size=14),  # Aumenta la dimensione del testo
-        width=1500,  # Larghezza estesa per il grafico orizzontale
-        height=800  # Altezza contenuta
-    )
+        # Passaggio 6: Aggiustamenti grafici per l'aspetto del grafico
+        fig.update_layout(
+            xaxis=dict(
+                title=dict(text='Budget (% sul fatturato)', font=dict(size=16, family='Arial', weight='bold')),  # Grassetto per l'asse X
+                tickfont=dict(size=14, family='Arial', weight='bold'),  # Grassetto per i tick dell'asse X
+                tickangle=0  # Angolatura dell'asse x impostata a 0 (per evitare inclinazioni)
+            ),
+            yaxis=dict(
+                title=dict(text='Tipo di Criticità', font=dict(size=16, family='Arial', weight='bold')),  # Grassetto per l'asse Y
+                tickfont=dict(size=14, family='Arial', weight='bold')  # Grassetto per i tick dell'asse Y
+            ),
+            title={'text': '  ', 'x': 0.5},  # Centra il titolo
+            template='plotly_white',  # Tema bianco
+            font=dict(size=14),  # Aumenta la dimensione del testo
+            width=1500,  # Larghezza estesa per il grafico orizzontale
+            height=800  # Altezza contenuta
+        )
 
-    # Passaggio 7: Visualizzare il grafico su Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+        # Passaggio 7: Visualizzare il grafico su Streamlit
+        st.plotly_chart(fig, use_container_width=True)
 
 
-    def cor_budget_efficienza(self):
+    def cor_budget_efficienza(df):
         # Esplodiamo la colonna 'impatto_efficienza' in più righe
-        df_exploded = self.df.assign(impatto_efficienza=self.df['impatto_efficienza'].str.split(',')).explode('impatto_efficienza')
+        df_exploded = df.assign(impatto_efficienza=df['impatto_efficienza'].str.split(',')).explode('impatto_efficienza')
 
         # Rimuoviamo gli spazi bianchi dai valori
-        df_exploded['impatto_efficienza'] = df_exploded['impatto_efficienza'].str.strip()
+        df_exploded['impatto_efficienza'] = df_exploded['impatto_efficienza'].str.strip(df)
 
         # Creiamo una tabella pivot con il conteggio delle occorrenze di ogni impatto_efficienza per budget_trans
         pivot_table = df_exploded.pivot_table(index='budget_trans', columns='impatto_efficienza', aggfunc='size', fill_value=0)

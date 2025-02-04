@@ -331,7 +331,7 @@ class funz:
             paper_bgcolor="#f5f5f5",
             plot_bgcolor="#eaeaea",
             margin=dict(l=40, r=40, t=40, b=40),
-            template="plotly"
+            template="plotly" F
         )
 
         # Mostra il grafico in Streamlit
