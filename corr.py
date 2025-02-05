@@ -10,9 +10,12 @@ import plotly.express as px
 import streamlit as st
 
 class Correlazione:
+    @staticmethod
     def semplifica_budget(df):
         df['budget'] = df['budget'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
+        return df  # Restituisce il DataFrame modificato
 
+    @staticmethod
     def mappa_maturita(df):
         values = {
             'Siamo un\'azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l\'introduzione di tecnologie digitali': 'Relativamente digitale',
@@ -23,16 +26,18 @@ class Correlazione:
         }
         df['maturita_digitale'] = df['maturita_digitale'].replace(values)
         df['maturita_digitale'].fillna('Nessuna risposta', inplace=True)
+        return df
 
+    @staticmethod
     def categorizza_anni(df):
         """
         Categorizza il numero di anni in fasce predefinite.
         """
         def categoria(anni):
-            if pd.isna(anni):  # Gestione dei valori NaN
+            if pd.isna(anni):
                 return 'Non specificato'
             try:
-                anni = int(anni)  # Converte il valore in intero
+                anni = int(anni)
                 if anni <= 5:
                     return '0-5 anni'
                 elif anni <= 10:
@@ -43,17 +48,19 @@ class Correlazione:
                     return '16-20 anni'
                 else:
                     return 'Oltre 20 anni'
-            except ValueError:  # Gestisce errori se 'anni' non è un numero
+            except ValueError:
                 return 'Non specificato'
 
         df['anni_attivita_categoria'] = df['anni_attivita'].apply(categoria)
+        return df
 
+    @staticmethod
     def heatmap_anni_maturita(df):
         # Mappare maturità digitale
-        mappa_maturita(df)
+        df = Correlazione.mappa_maturita(df)
         
         # Categorizzare gli anni
-        categorizza_anni(df)
+        df = Correlazione.categorizza_anni(df)
         
         # Ordinare per fasce di anni
         ordine_anni = ['0-5 anni', '6-10 anni', '11-15 anni', '16-20 anni', 'Oltre 20 anni']
@@ -66,7 +73,7 @@ class Correlazione:
         fig = px.imshow(
             pivot,
             text_auto=True,
-            color_continuous_scale = ['#FAD0D0', '#F8A0A0', '#F57272', '#F44D4D', '#D32F2F'],  # Scala di colori
+            color_continuous_scale=['#FAD0D0', '#F8A0A0', '#F57272', '#F44D4D', '#D32F2F'],
             title='  ',
             labels={'x': 'Maturità Digitale', 'y': 'Fascia Anni Esperienza', 'color': 'Numero di Aziende'}
         )
@@ -74,31 +81,30 @@ class Correlazione:
         # Personalizzazione del layout del grafico
         fig.update_layout(
             xaxis=dict(
-                title=dict(text='Maturità Digitale', font=dict(size=18, family='Arial', weight='bold')),
-                tickfont=dict(size=14, family='Arial', weight='bold'),
-                tickangle=45,  # Angolo dei tick per evitare sovrapposizione
+                title=dict(text='Maturità Digitale', font=dict(size=18, family='Arial', color='black')),
+                tickfont=dict(size=14, family='Arial', color='black'),
+                tickangle=45,
                 showticklabels=True
             ),
             yaxis=dict(
-                title=dict(text='Fascia di Anni', font=dict(size=18, family='Arial', weight='bold')),
-                tickfont=dict(size=14, family='Arial', weight='bold'),
+                title=dict(text='Fascia di Anni', font=dict(size=18, family='Arial', color='black')),
+                tickfont=dict(size=14, family='Arial', color='black'),
                 showticklabels=True
             ),
-            title={'text': '  ', 'x': 0.5},  # Centra il titolo
-            template='plotly_white',  # Tema bianco
-            font=dict(size=14),  # Aumenta la dimensione del testo
-            width=1500,  # Larghezza ancora più grande
-            height=800,  # Altezza maggiore per una visualizzazione chiara
-            margin=dict(l=200, r=200, t=150, b=30)  # Margini più ampi per evitare il taglio delle etichette
+            title={'text': '  ', 'x': 0.5},
+            template='plotly_white',
+            font=dict(size=14),
+            width=1500,
+            height=800,
+            margin=dict(l=200, r=200, t=150, b=30)
         )
 
         # Visualizzare il grafico su Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
-
-
+    @staticmethod
     def correlazione1_budget(df):
-        df['budget_clean'] = df['budget_trans'].apply(semplifica_budget)
+        df['budget_clean'] = df['budget_trans'].apply(Correlazione.semplifica_budget)
 
         ordine_budget = ['Meno del 5%', '5%-10%', '11%-20%', '21%-30%', 'Più del 30%', 'Non specificato']
 
@@ -177,7 +183,7 @@ class Correlazione:
         df = df.drop('criticita', axis=1).join(df_separato)
 
         # Passaggio 3: Aggiungere la colonna 'budget_clean' con la funzione semplifica_budget
-        df['budget_clean'] = df['budget_trans'].apply(semplifica_budget)
+        df['budget_clean'] = df['budget_trans'].apply(Correlazione.semplifica_budget)
 
         # Passaggio 4: Creare la crosstab per la relazione tra 'budget_clean' e 'criticita'
         pivot_budget_criticita = pd.crosstab(df['criticita'], df['budget_clean'])

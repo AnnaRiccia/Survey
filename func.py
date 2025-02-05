@@ -7,7 +7,7 @@ pio.templates.default = "plotly"
 import plotly.express as px
 import numpy as np
 
-
+@staticmethod
 def categorizza_anni(anni):
     if anni <= 5:
         return '0-5 anni'
@@ -22,7 +22,7 @@ def categorizza_anni(anni):
 
 # # # intervistato ----------------------------
 class funz:
-        
+    @staticmethod
     def plot_infr(df):
         # Conta la presenza di competenze digitali
         infr_counts = df['presenza_infrastrutture'].value_counts()
@@ -56,7 +56,7 @@ class funz:
 
         # Mostra il grafico su Streamlit
         st.plotly_chart(fig)
-
+    @staticmethod
     def plot_fasce_anni(df):
         # Conta le frequenze di ciascuna fascia di anni
         df['fascia_anni'] = df['Anni'].apply(categorizza_anni)
@@ -110,7 +110,7 @@ class funz:
         st.plotly_chart(fig, theme= None, use_container_width=True)
         
 
-
+    @staticmethod
     def plot_role_distribution(df):
 
         # Definire i ruoli con conoscenze informatiche approfondite
@@ -171,7 +171,7 @@ class funz:
         st.plotly_chart(fig, use_container_width=True)
 
     
-
+    @staticmethod
     def plot_Rel(df):
         # Conta la presenza di competenze digitali
         infr_counts = df['ecosistema_valore'].value_counts()
@@ -208,13 +208,13 @@ class funz:
 
 
 # # #  maturità digitale ---------------------
-
+    @staticmethod
     def analyze_digital_maturity(df):
         # Mappatura dei valori
         values = {
-            'Siamo un’azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l’introduzione di tecnologie digitali': 'Relativamente digitale',
+            'Siamo un\'azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l\'introduzione di tecnologie digitali': 'Relativamente digitale',
             'È stato avviato qualche progetto pilota di trasformazione digitale che al momento è ancora in corso': 'Qualche progetto avviato',
-            'Siamo un’azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall’utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
+            'Siamo un\'azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall\'utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
             'Al momento non è in corso un processo di trasformazione digitale né è stato avviato e concluso in passato': 'Non digitalizzato',
             'È stato avviato qualche progetto pilota di trasformazione digitale che è stato interrotto e non portato a compimento': 'Qualche progetto interrotto'
         }
@@ -281,7 +281,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 
     #################################################################################### FIGURE COMPETENZE TECNICHE ####################################################################################
-
+    @staticmethod
     def plot_strategie_talent(df):
         """
         Visualizza un grafico a torta per le strategie talent, in base alle risposte.
@@ -338,7 +338,7 @@ class funz:
         st.plotly_chart(fig, use_container_width=True)
 
 ######################################################################### transizione digitale #####################################################################################################################
-
+    @staticmethod
     def plot_trans(df):
         # Conta la presenza di competenze digitali
         infr_counts = df['trans_digitale'].value_counts()
@@ -374,6 +374,7 @@ class funz:
         st.plotly_chart(fig)
 
     ################################################################################ inizio transizione ##################################################################################################################
+    @staticmethod
     def inizio_trans(df):
         df['inizio_trans'].fillna('Nessuna risposta', inplace=True)  # Rimpiazziamo NaN con 'Nessuna risposta'
 
@@ -438,7 +439,7 @@ class funz:
 
     ##################################################################################################### stimoli trans ###########################################################################################
 
-
+    @staticmethod
     def plot_stimoli_trans_funnel(df):
         # Rimpiazziamo i NaN con 'Nessuna risposta' direttamente nella colonna
         df['stimoli_trans'] = df['stimoli_trans'].fillna('Nessuna risposta')
@@ -485,7 +486,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 
     ########################################################## COINVOGLIEMNTO LEADER ###################################################################
-
+    @staticmethod
     def plot_coinvolgimento_leader(df):
         # Mappatura dei valori numerici in descrizioni comprensibili
         mappa_coinvolgimento = {
@@ -560,7 +561,7 @@ class funz:
         # Visualizza il grafico in Streamlit
         st.plotly_chart(fig, theme=None, use_container_width=True)
 ############################################################################################### responsabilità dipendenti ######################################################################
-
+    @staticmethod
     def plot_resp_dipendenti_funnel(df):
         # Rimpiazziamo i NaN con 'Nessuna risposta' direttamente nella colonna
         df['resp_dipendenti'] = df['resp_dipendenti'].fillna('Nessuna risposta')
@@ -601,7 +602,7 @@ class funz:
         # Mostra il grafico
         st.plotly_chart(fig, theme=None, use_container_width=True)
 ############################################################################ cosa #############################################################################################################################################
-
+    @staticmethod
     def analyze_fase_trans(df):
         # Mappatura dei valori
         values = {
@@ -674,7 +675,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 ############################################################################ cosa #############################################################################################################################################
 
-
+    @staticmethod
     def analyze_budget_trans(df):
         # Mappatura dei valori
         values = {
@@ -748,7 +749,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 #################################################################################################################################################################################################################################
 
-
+    @staticmethod
     def plot_processi_digit(df):
         # Rimpiazziamo i NaN con 'Nessuna risposta' direttamente nella colonna
         df['processi_digit'] = df['processi_digit'].fillna('Nessuna risposta')
@@ -796,7 +797,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 #################################################################################################################################################################################################################################
 
-
+    @staticmethod
     def plot_criticita(df):
 
 
@@ -858,6 +859,7 @@ class funz:
         st.plotly_chart(fig, theme=None, use_container_width=True)
 
 ############################################################################################## SODDISFAZIONE E MIGLIORAMENTI ######################################################################################################
+    @staticmethod
     def analyze_soddisfazione(df):
         """
         Analizza la colonna 'soddisfazione' e visualizza un grafico a torta basato sui valori unici,
@@ -916,7 +918,7 @@ class funz:
 
 
 
-
+    @staticmethod
     def analyze_impatto_efficienza(df):
         """
         Analizza una colonna in cui ogni cella può contenere più valori separati da virgola,
@@ -967,7 +969,7 @@ class funz:
 
         # Mostra il grafico in Streamlit
         st.plotly_chart(fig, use_container_width=True)
-
+    @staticmethod
     def analyze_milgioramenti(df):
         """
         Analizza una colonna in cui ogni cella può contenere più valori separati da virgola,
@@ -1037,7 +1039,7 @@ class GraficoFigure:
             "In disaccordo": 1,
             np.nan: 0  # Se np.nan è una risposta, mappiamola a 0
         }
-
+    @staticmethod
     def plot_graph(self, column_name):
         """
         Genera un grafico a torta e a barre per una colonna specifica del dataframe.

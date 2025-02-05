@@ -125,6 +125,8 @@ def create_section(title, plot_function, df, explanation=None):
         if explanation:
             st.markdown(f" {explanation}", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
+
+
 ################################################################################# MOSTRA METRICHE #################################################################################
 
 
@@ -203,7 +205,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
                 - Devo aggiungere descrizione colonna AC"""
         )
         create_section(
-        title='Quale percentuale del budget operativo è stata allocata per le iniziative di trasformazione digitale nell’azienda nel 2023?',
+        title='Quale percentuale del budget operativo è stata allocata per le iniziative di trasformazione digitale nell\'azienda nel 2023?',
         plot_function=funz.analyze_budget_trans,
         df=df,
         explanation=            """
@@ -217,16 +219,16 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
         st.markdown("### Analisi descrittiva - Figure con Competenze Digitali")
         grafico3= GraficoFigure(df)
         create_section(
-        title='Quali strategie sta adottando l’azienda per attrarre e sviluppare personale con competenze digitali avanzate?',
+        title='Quali strategie sta adottando l\'azienda per attrarre e sviluppare personale con competenze digitali avanzate?',
         plot_function=funz.plot_strategie_talent,
         df=df,
         explanation=           """
-            - Aggiungo Spiegazione
+            - Aggiungo Spiegazione plot_strategie_talent
             """
         )
         create_section(
         title='In azienda sono presenti figure con conoscenze digitali?',
-        plot_function=grafico3.plot_cdh_conoscenze,
+        plot_function=lambda df: grafico3.plot_cdh_conoscenze(),
         df=df,
         explanation=           """
             - Nel complesso, la maggior parte delle aziende sembra riconoscere la presenza di figure con competenze digitali, 
@@ -283,7 +285,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
     
     elif st.session_state.selected_subcategory == "Infrastrutture Digitali":
         st.markdown("### Analisi descrittiva - Infrastrutture digitali")
-        grafico = GraficoInfrastruttura(df)
+        grafico = GraficoInfrastruttura()
 
         create_section(
         title=' Sono presenti in azienda risorse tecnologiche e strutture organizzative che consentano la gestione e l\'elaborazione delle informazioni digitali?',
@@ -340,7 +342,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
 
     elif st.session_state.selected_subcategory == "Relazioni e Valore economico":
         st.markdown("### Analisi descrittiva - Relazioni e valore economico")
-        grafico1 = GraficoRelazioni(df)
+        grafico1 = GraficoRelazioni()
         create_section(
         title='Le persone hanno sviluppato relazioni capaci di creare valore economico e di favorire l\'innovazione attraverso tecnologie digitali?',
         plot_function=funz.plot_Rel,
@@ -414,7 +416,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """
         )
         create_section(
-        title='In che modo l’azienda sta responsabilizzando i dipendenti a partecipare attivamente alla trasformazione digitale?',
+        title='In che modo l\'azienda sta responsabilizzando i dipendenti a partecipare attivamente alla trasformazione digitale?',
         plot_function=funz.plot_resp_dipendenti_funnel,
         df=df,
         explanation= 
