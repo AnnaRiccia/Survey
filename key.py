@@ -4,18 +4,25 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import unicodedata
+df = pd.read_excel('cleaned_data.xlsx')
+
 class key:
     def __init__(self, df):
         self.df = df
 
     def mappa_maturita(self):
         values = {
-            'Siamo un\'azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l\'introduzione di tecnologie digitali': 'Relativamente digitale',
+            'Siamo una azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l introduzione di tecnologie digitali': 'Relativamente digitale',
             'È stato avviato qualche progetto pilota di trasformazione digitale che al momento è ancora in corso': 'Qualche progetto avviato',
-            'Siamo un\'azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall\'utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
+            'Siamo una azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
             'Al momento non è in corso un processo di trasformazione digitale né è stato avviato e concluso in passato': 'Non digitalizzato',
             'È stato avviato qualche progetto pilota di trasformazione digitale che è stato interrotto e non portato a compimento': 'Qualche progetto interrotto'
         }
+        
+        # Normalizza le stringhe nella colonna 'maturita_digitale'
+        self.df['maturita_digitale'] = self.df['maturita_digitale'].apply(lambda x: unicodedata.normalize('NFKD', x) if isinstance(x, str) else x)
+        
         self.df['maturita_digitale'] = self.df['maturita_digitale'].replace(values)
         self.df['maturita_digitale'].fillna('Nessuna risposta', inplace=True)
     # Funzione per creare lo scatter plot

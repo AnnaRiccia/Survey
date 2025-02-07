@@ -1095,19 +1095,19 @@ class GraficoFigure:
 
     # Metodi specifici per ogni colonna (richiamano plot_graph)
     def plot_cdh_conoscenze(self):
-        st.plotly_chart(self.plot_graph('cdh_conoscenze'), use_container_width=True)
+        st.plotly_chart(self.plot_graph(self, "cdh_conoscenze"), use_container_width=True)
 
     def plot_cdh_competenze_tecniche(self):
-        st.plotly_chart(self.plot_graph('cdh_competenze_tecniche'), use_container_width=True)
+        st.plotly_chart(self.plot_graph(self, 'cdh_competenze_tecniche'), use_container_width=True)
 
     def plot_cdh_abilita_analitiche(self):
-        st.plotly_chart(self.plot_graph('cdh_abilita_analitiche'), use_container_width=True)
+        st.plotly_chart(self.plot_graph(self, 'cdh_abilita_analitiche'), use_container_width=True)
 
     def plot_cdh_innovazione(self):
-        st.plotly_chart(self.plot_graph('cdh_innovazione'), use_container_width=True)
+        st.plotly_chart(self.plot_graph(self, 'cdh_innovazione'), use_container_width=True)
 
     def plot_cdh_formazione(self):
-        st.plotly_chart(self.plot_graph('cdh_formazione'), use_container_width=True)
+        st.plotly_chart(self.plot_graph(self, 'cdh_formazione'), use_container_width=True)
 
 
 
@@ -1124,6 +1124,15 @@ class GraficoInfrastruttura:
             'In disaccordo': 1,
             np.nan: 0  # Se np.nan è una risposta, mappiamola a 0
         }
+                # Mappa inversa per visualizzare le risposte originali
+        self.mappa_risposte_inversa = {
+            4: "Molto D\'accordo",
+            3: "D\'accordo",
+            2: "Neutrale",
+            1: "In disaccordo",
+            0: "Nessuna risposta"
+        }
+        self.colori = ['#228B22', '#8fbc8f', '#66cdaa', '#2e8b57', '#006400']
 
     def plot_graph(self, column_name):
         self.df[column_name] = self.df[column_name].map(self.mappa_risposte)
@@ -1283,11 +1292,11 @@ class GraficoRelazioni:
             """
             Genera il grafico per la colonna 'eco_piattaforme' in formato a torta e a barre.
             """
-            st.plotly_chart(self.plot_graph2('eco_piattaforme'), use_container_width=True, key='eco_interazione')
+            st.plotly_chart(self.plot_graph2('eco_piattaforme'), use_container_width=True, key='eco_piattaforme')
 
         # Funzione per il grafico dei processi digitalizzati
     def plot_cdh_processi(self):
             """
             Genera il grafico per la colonna 'eco_processi' in formato a torta e a barre.
             """
-            st.plotly_chart(self.plot_graph2('eco_processi'), use_container_width=True, key='eco_interazione')
+            st.plotly_chart(self.plot_graph2('eco_processi'), use_container_width=True, key='eco_processi')

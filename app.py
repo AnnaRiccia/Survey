@@ -73,7 +73,7 @@ st.markdown("---")
 
 # Aggiungi la selezione della sottocategoria direttamente nel corpo principale
 if st.session_state.selected_tab == "Analisi Descrittiva":
-    st.markdown("<h3 style='color: black; font-size: 36px; font-weight: bold;'>Seleziona una sottocategoria:</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='font-size: 36px; font-weight: bold;'>Seleziona una sottocategoria:</h3>", unsafe_allow_html=True)
 
     # Lista delle categorie
     subcategories = [
@@ -122,6 +122,16 @@ def create_section(title, plot_function, df, explanation=None):
     with col_center:
         st.markdown(f"### {title}", unsafe_allow_html=True)
         plot_function(df)  # Richiama la funzione passata come parametro
+        if explanation:
+            st.markdown(f" {explanation}", unsafe_allow_html=True)
+        st.markdown("<hr>", unsafe_allow_html=True)
+
+# Funzione per creare una sezione con un grafico
+def create_section2(title, plot_function, df, explanation=None):
+    col_left, col_center, col_right = st.columns([1, 4, 1])
+    with col_center:
+        st.markdown(f"### {title}", unsafe_allow_html=True)
+        plot_function()  # Richiama la funzione passata come parametro
         if explanation:
             st.markdown(f" {explanation}", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
@@ -226,9 +236,9 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             - Aggiungo Spiegazione plot_strategie_talent
             """
         )
-        create_section(
+        create_section2(
         title='In azienda sono presenti figure con conoscenze digitali?',
-        plot_function=lambda df: grafico3.plot_cdh_conoscenze(),
+        plot_function=grafico3.plot_cdh_conoscenze,
         df=df,
         explanation=           """
             - Nel complesso, la maggior parte delle aziende sembra riconoscere la presenza di figure con competenze digitali, 
@@ -238,7 +248,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """
         )
         
-        create_section(
+        create_section2(
         title='In azienda sono presenti figure con competenze tecniche?',
         plot_function=grafico3.plot_cdh_competenze_tecniche,
         df=df,
@@ -248,7 +258,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """
         )
         
-        create_section(
+        create_section2(
         title=' In azienda sono presenti figure con abilità analitiche e decisionali?',
         plot_function=grafico3.plot_cdh_abilita_analitiche,
         df=df,
@@ -258,7 +268,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
                 """
         )
         
-        create_section(
+        create_section2(
         title=' In azienda sono presenti figure con capacità di innovazione?',
         plot_function=grafico3.plot_cdh_innovazione,
         df=df,
@@ -268,7 +278,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
                 """
         )
         
-        create_section(
+        create_section2(
         title='Viene fornita una formazione continua?',
         plot_function=grafico3.plot_cdh_formazione,
         df=df,
@@ -285,7 +295,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
     
     elif st.session_state.selected_subcategory == "Infrastrutture Digitali":
         st.markdown("### Analisi descrittiva - Infrastrutture digitali")
-        grafico = GraficoInfrastruttura()
+        grafico = GraficoInfrastruttura(df)
 
         create_section(
         title=' Sono presenti in azienda risorse tecnologiche e strutture organizzative che consentano la gestione e l\'elaborazione delle informazioni digitali?',
@@ -299,7 +309,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """
         )
         
-        create_section(
+        create_section2(
         title='In azienda sono presenti hardware per l\'elaborazione e l\'archiviazione dei dati?',
         plot_function=grafico.plot_hardware,
         df=df,
@@ -308,7 +318,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             - La maggior parte delle aziende è ben equipaggiata con hardware per gestire i dati, ma il 16.4% di risposte mancanti evidenzia possibili lacune nella comunicazione.
             """
         )
-        create_section(
+        create_section2(
         title='In azienda sono presenti software per l\'elaborazione, l\'analisi e la gestione delle informazioni digitali?',
         plot_function=grafico.plot_software,
         df= df,
@@ -317,7 +327,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             - La maggior parte delle aziende è dotata di software per la gestione digitale, ma c'è ancora una piccola parte che potrebbe migliorare o non essere consapevole delle proprie capacità.
             """
         )
-        create_section(
+        create_section2(
         title='In azienda sono presenti servizi cloud per l\'elaborazione e l\'archiviazione dei dati?',
         plot_function=grafico.plot_cloud,
         df= df,
@@ -326,7 +336,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             -  I servizi cloud non sono ancora completamente integrati nelle infrastrutture aziendali. C'è una divisione tra aziende molto soddisfatte e altre che mostrano incertezza o insoddisfazione.
             """
         )
-        create_section(
+        create_section2(
         title='In azienda sono presenti servizi per la sicurezza informatica?',
         plot_function=grafico.plot_sicurezza,
         df=df,
@@ -342,7 +352,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
 
     elif st.session_state.selected_subcategory == "Relazioni e Valore economico":
         st.markdown("### Analisi descrittiva - Relazioni e valore economico")
-        grafico1 = GraficoRelazioni()
+        grafico1 = GraficoRelazioni(df)
         create_section(
         title='Le persone hanno sviluppato relazioni capaci di creare valore economico e di favorire l\'innovazione attraverso tecnologie digitali?',
         plot_function=funz.plot_Rel,
@@ -352,7 +362,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """
             """
         )
-        create_section(
+        create_section2(
         title='In azienda esistono interazioni efficaci tra le risorse digitali?',
         plot_function=grafico1.plot_cdh_interazione,
         df=df,
@@ -361,7 +371,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """  
             """
         )
-        create_section(
+        create_section2(
         title='In azienda sono presenti piattaforme digitali per la collaborazione?',
         plot_function=grafico1.plot_cdh_piattaforme,
         df=df,
@@ -370,7 +380,7 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
             """  
             """
         )
-        create_section(
+        create_section2(
         title='In azienda i processi aziendali sono digitalizzati?',
         plot_function=grafico1.plot_cdh_processi,
         df=df,
@@ -490,17 +500,18 @@ if st.session_state.selected_tab == "Analisi Descrittiva":
 #################################################################################     ANALISI DIMENSIONE CHIAVE    #################################################################################
 
 elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
-    create_section(
+    chiave = key(df)
+    create_section2(
         title='Maturità Digitale e Soddisfazione',
-        plot_function=key.hist_soddisfazione_maturita,
+        plot_function=chiave.hist_soddisfazione_maturita,
         df=df,
         explanation= 
             """  
                     - Aggiungo spiegazione
             """)  
-    create_section(
+    create_section2(
         title='Maturità Digitale e Infrastrutture Digitali',
-        plot_function=key.visualizza_maturita_infrastrutture,
+        plot_function=chiave.visualizza_maturita_infrastrutture,
         df=df,
         explanation= 
             """  
@@ -509,26 +520,26 @@ elif st.session_state.selected_tab == "Analisi Dimensioni Chiave":
                    - I colori aiutano a visualizzare immediatamente la densità delle aziende in ciascun gruppo.
             """)  
     
-    create_section(
+    create_section2(
             title='Maturità Digitale e Presenza Figure Competenti ',
-            plot_function=key.visualizza_maturita_figure,
+            plot_function=chiave.visualizza_maturita_figure,
             df=df,
             explanation= 
                 """  
                     - Aggiungo spiegazione 
                 """)   
     
-    create_section(
+    create_section2(
             title='Periodo di Inizio Transizione Digitale e Maturità Digitale Raggiunta ',
-            plot_function=key.analizza_relazione_inizio_maturita_heatmap,
+            plot_function=chiave.analizza_relazione_inizio_maturita_heatmap,
             df=df,
             explanation= 
                 """  
                     - Aggiungo spiegazione
                 """)
-    create_section(
+    create_section2(
             title='Grado di Coinvolgimento del Leader e Maturità Digitale Raggiunta ',
-            plot_function=key.analizza_maturita_leader,
+            plot_function=chiave.analizza_maturita_leader,
             df=df,
             explanation= 
                 """  

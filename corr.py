@@ -12,15 +12,15 @@ import streamlit as st
 class Correlazione:
     @staticmethod
     def semplifica_budget(df):
-        df['budget'] = df['budget'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
+        df['budget_trans'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
         return df  # Restituisce il DataFrame modificato
 
     @staticmethod
     def mappa_maturita(df):
         values = {
-            'Siamo un\'azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l\'introduzione di tecnologie digitali': 'Relativamente digitale',
+            'Siamo un’azienda relativamente digitale; alcuni processi aziendali sono stati digitalizzati con l’introduzione di tecnologie digitali': 'Relativamente digitale',
             'È stato avviato qualche progetto pilota di trasformazione digitale che al momento è ancora in corso': 'Qualche progetto avviato',
-            'Siamo un\'azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall\'utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
+            'Siamo un’azienda totalmente Digital Oriented; tutti i nostri processi sono supportati dall’utilizzo di tecnologie digitali': 'Totalmente Digital Oriented',
             'Al momento non è in corso un processo di trasformazione digitale né è stato avviato e concluso in passato': 'Non digitalizzato',
             'È stato avviato qualche progetto pilota di trasformazione digitale che è stato interrotto e non portato a compimento': 'Qualche progetto interrotto'
         }
@@ -51,7 +51,7 @@ class Correlazione:
             except ValueError:
                 return 'Non specificato'
 
-        df['anni_attivita_categoria'] = df['anni_attivita'].apply(categoria)
+        df['anni_attivita_categoria'] = df['Anni'].apply(categoria)
         return df
 
     @staticmethod
@@ -104,7 +104,7 @@ class Correlazione:
 
     @staticmethod
     def correlazione1_budget(df):
-        df['budget_clean'] = df['budget_trans'].apply(Correlazione.semplifica_budget)
+        df['budget_clean'] = df['budget_trans'].apply(lambda x: "Non specificato" if pd.isna(x) or x == 'Non so' else x)
 
         ordine_budget = ['Meno del 5%', '5%-10%', '11%-20%', '21%-30%', 'Più del 30%', 'Non specificato']
 
